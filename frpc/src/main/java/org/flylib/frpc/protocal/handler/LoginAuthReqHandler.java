@@ -3,6 +3,7 @@ package org.flylib.frpc.protocal.handler;
 import org.flylib.frpc.protocal.constant.MessageType;
 import org.flylib.frpc.protocal.model.Header;
 import org.flylib.frpc.protocal.model.NettyMessage;
+import org.flylib.frpc.util.ByteUtil;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -21,7 +22,11 @@ public class LoginAuthReqHandler extends ChannelInboundHandlerAdapter {
         
         // 如果是握手应答消息，需要判断是否认证成功
         if (message.getHeader() != null && message.getHeader().getType() == MessageType.LOGIN_RESP.value()) {
-        	byte loginResult = (byte)message.getBody();
+        	//
+//        	byte loginResult = (byte)message.getBody();
+        	Object body = message.getBody();
+        	byte[] byteArrayTmp = ByteUtil.toByteArray(body);
+        	byte loginResult = byteArrayTmp[0];
         	if (loginResult != (byte) 0) {
         		ctx.close();
         	} else {
